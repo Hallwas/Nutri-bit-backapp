@@ -1,0 +1,86 @@
+### login (guarda o token)
+# @name login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{ "email": "usuario@upf.br", "password": "abc123" }
+
+###
+@token = {{login.response.body.access_token}}
+
+### perfil do usuário logado
+GET http://localhost:3000/api/profiles/me
+Authorization: Bearer {{token}}
+
+###
+PUT http://localhost:3000/api/profiles/me
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{ "fullName": "Maria Silva", "weight": 70.5, "height": 175, "sex": "F", "activityLevel": "moderate" }
+
+### alimentos
+GET http://localhost:3000/api/foods?search=pão
+Authorization: Bearer {{token}}
+
+### planos
+GET http://localhost:3000/api/meal-plans
+Authorization: Bearer {{token}}
+
+###
+POST http://localhost:3000/api/meal-plans
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{ "name": "Plano de emagrecimento", "goal": "Emagrecer", "description": "Teste" }
+
+###
+GET http://localhost:3000/api/meal-plans/1
+Authorization: Bearer {{token}}
+
+###
+PUT http://localhost:3000/api/meal-plans/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{ "name": "Novo nome", "active": true }
+
+###
+POST http://localhost:3000/api/meal-plans/1/weeks
+Authorization: Bearer {{token}}
+
+### refeição no dia 1
+POST http://localhost:3000/api/days/1/meals
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{ "name": "Café da manhã", "type": "breakfast", "time": "07:30",
+  "ingredients": [ { "foodId": 6, "quantity": 2, "unit": "fatias", "grams": 50 },
+                   { "foodId": 8, "quantity": 200, "unit": "ml" } ] }
+
+###
+PUT http://localhost:3000/api/meals/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{ "name": "Café", "ingredients": [ { "foodId": 6, "quantity": 100, "unit": "g" } ] }
+
+###
+DELETE http://localhost:3000/api/meals/1
+Authorization: Bearer {{token}}
+
+###
+DELETE http://localhost:3000/api/meal-plans/1
+Authorization: Bearer {{token}}
+
+### excluir semana 2 do plano 1
+DELETE http://localhost:3000/api/meal-plans/1/weeks/2
+Authorization: Bearer {{token}}
+
+### modelos sugeridos (400 se o perfil estiver incompleto)
+GET http://localhost:3000/api/meal-plans/templates
+Authorization: Bearer {{token}}
+
+### usar um modelo (copia para o usuário)
+POST http://localhost:3000/api/meal-plans/templates/1/use
+Authorization: Bearer {{token}}

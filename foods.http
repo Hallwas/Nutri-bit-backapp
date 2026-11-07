@@ -1,0 +1,25 @@
+### login (guarda o token)
+# @name login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{ "email": "usuario@upf.br", "password": "abc123" }
+
+###
+@token = {{login.response.body.access_token}}
+
+### buscar alimentos
+GET http://localhost:3000/api/foods?search=arroz
+Authorization: Bearer {{token}}
+
+### alimentos parecidos (id 145 = pão integral de forma, 50 g)
+GET http://localhost:3000/api/foods/145/similar?grams=50&limit=3
+Authorization: Bearer {{token}}
+
+### erros: 404 (id inexistente), 400 (grams inválido)
+GET http://localhost:3000/api/foods/99999/similar
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:3000/api/foods/145/similar?grams=0
+Authorization: Bearer {{token}}

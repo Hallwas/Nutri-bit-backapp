@@ -1,0 +1,70 @@
+### 
+## Guarda a resposta da requisição com o nome login
+# @name login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "usuario@upf.br",
+    "password": "abc123"
+}
+
+###
+## Cria uma variável chamada token, o valor dela é trocado pelo valor real da requisição
+@token = {{login.response.body.access_token}}
+
+
+###
+GET http://localhost:3000/api/profiles
+Authorization: Bearer {{token}}
+
+
+###
+GET http://localhost:3000/api/profiles/1
+Authorization: Bearer {{token}}
+
+
+###
+POST http://localhost:3000/api/profiles
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "userId": 3,
+    "fullName": "Maria da Silva Souza",
+    "birthDate": "1995-05-22",
+}
+
+###
+PUT http://localhost:3000/api/profiles/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "fullName": "João da Silva Junior",
+    "birthDate": "1990-01-15",
+}
+
+
+###
+DELETE http://localhost:3000/api/profiles/1
+Authorization: Bearer {{token}}
+
+### perfil logado (com dailyCalories e missing)
+GET http://localhost:3000/api/profiles/me
+Authorization: Bearer {{token}}
+
+###
+PUT http://localhost:3000/api/profiles/me
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{ "fullName": "Maria Silva", "birthDate": "1995-05-22", "weight": 60, "height": 165,
+  "sex": "F", "activityLevel": "moderate", "goal": "lose" }
+
+### admin (as rotas /users e /profiles acima exigem este login)
+# @name loginAdmin
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{ "email": "admin@nutribit.com", "password": "admin123" }
